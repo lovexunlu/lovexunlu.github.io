@@ -145,7 +145,7 @@ const MAX_MOMENTS = 50;
             '今天的晚霞很美 🌅', '记录一下此刻', '有你真好 ❤️', '每一天都值得被记住',
             '简单的快乐', '做一个温柔的人', '不负好时光', '今天也是元气满满的一天！'
         ];
-        return texts[Math.floor(Math.random() * texts.length)];
+        return '';
     }
 
     async function autoPostMoment() {
@@ -189,14 +189,12 @@ const MAX_MOMENTS = 50;
     function startAutoTimers() {
         stopAutoTimers();
         if (!autoSettings.enabled) return;
-        const postTimer = setInterval(() => { autoPostMoment(); }, autoSettings.postInterval * 60 * 1000);
+        const randomDelay = (Math.floor(Math.random() * (autoSettings.postInterval - 60)) + 60) * 60 * 1000;
+        const postTimer = setInterval(() => { autoPostMoment(); }, randomDelay);
         autoTimers.push(postTimer);
         const interactTimer = setInterval(() => { autoInteract(); }, autoSettings.commentInterval * 60 * 1000);
         autoTimers.push(interactTimer);
-        setTimeout(() => autoPostMoment(), 5000);
-        setTimeout(() => autoInteract(), 10000);
     }
-
     function stopAutoTimers() {
         autoTimers.forEach(t => clearInterval(t));
         autoTimers = [];
