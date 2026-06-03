@@ -337,7 +337,7 @@ const MAX_MOMENTS = 50;
             }
             return `<div class="moments-item">
                 <div class="moments-item-header">
-                    <div class="moments-avatar ${isMine ? 'moments-avatar-mine' : 'moments-avatar-partner'}"><i class="fas fa-user"></i></div>
+                   <div class="moments-avatar ${isMine ? 'moments-avatar-mine' : 'moments-avatar-partner'}" style="background-image:url(${getMomentAvatar(isMine ? 'me' : 'partner') || ''});background-size:cover;cursor:pointer;" onclick="event.stopPropagation();uploadMomentAvatar('${isMine ? 'me' : 'partner'}')">${getMomentAvatar(isMine ? 'me' : 'partner') ? '' : '<i class="fas fa-user"></i>'}</div>
                     <div class="moments-user-info"><div class="moments-user-name">${authorDisplay}</div><div class="moments-time">${formatTime(moment.timestamp)}</div></div>
                                       <button class="moments-delete-btn" onclick="window.deleteMomentById('${moment.id}')"><i class="fas fa-trash-alt"></i></button>
                 </div>
@@ -514,6 +514,30 @@ const MAX_MOMENTS = 50;
         renderMomentsList();
         startAutoTimers();
     }
+    // ========== 头像上传 ==========
+    function uploadMomentAvatar(type) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                localStorage.setItem('moment_avatar_' + type, ev.target.result);
+                renderMomentsList();
+                if (typeof showNotification === 'function') showNotification('头像已更新！✨', 'success');
+            };
+            reader.readAsDataURL(file);
+        };
+        input.click();
+    }
+
+    function getMomentAvatar(user) {
+        return localStorage.getItem('moment_avatar_' + user) || null;
+    }
+
+    window.uploadMomentAvatar = uploadMomentAvatar;
 
     // ========== 自动设置弹窗 ==========
     function openAutoSettingsModal() {
