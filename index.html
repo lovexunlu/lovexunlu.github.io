@@ -2240,7 +2240,7 @@
     <script src="js/onboarding.js"></script> 
     <script src="js/listeners.js"></script>
     <script src="js/app.js"></script>
-<div style="position:fixed;bottom:10px;right:10px;z-index:9999;opacity:0.3;">
+<div style="position:fixed;bottom:80px;right:10px;z-index:9999;opacity:0.3;">
     <button onclick="if(confirm('紧急清理：删除最旧的聊天记录（保留最新500条）？')){try{var d=JSON.parse(localStorage.getItem('chatData')||'{}');var keys=Object.keys(d);keys.forEach(function(k){var arr=d[k];if(arr&&arr.length>500){d[k]=arr.slice(-500);}});localStorage.setItem('chatData',JSON.stringify(d));alert('清理完成！请刷新页面');location.reload();}catch(e){alert('清理失败');}}" style="background:rgba(255,80,80,0.5);color:#fff;border:none;border-radius:20px;padding:4px 12px;font-size:10px;cursor:pointer;">🆘</button>
 </div>
 </body>
