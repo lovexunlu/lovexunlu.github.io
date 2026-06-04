@@ -642,22 +642,24 @@ const MAX_MOMENTS = 50;
         modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
         document.body.appendChild(modal);
     }
-
     function doDecision() {
         const question = document.getElementById('decision-question').value.trim();
         const optionsText = document.getElementById('decision-options').value.trim();
         const resultEl = document.getElementById('decision-result');
-        
-        if (optionsText) {
-            const options = optionsText.split('\n').filter(o => o.trim());
-            if (options.length === 0) { resultEl.textContent = '请至少输入一个选项'; return; }
-            const result = options[Math.floor(Math.random() * options.length)];
-            resultEl.innerHTML = `<div style="font-size:13px;color:var(--text-secondary);">${question || '决策结果'}</div><div style="font-size:24px;margin-top:6px;">👉 ${result}</div>`;
-        } else {
-            const answers = ['是 ✅', '否 ❌'];
-            const result = answers[Math.floor(Math.random() * answers.length)];
-            resultEl.innerHTML = `<div style="font-size:13px;color:var(--text-secondary);">${question || '决策结果'}</div><div style="font-size:28px;margin-top:6px;">${result}</div>`;
-        }
+        resultEl.innerHTML = '<div style="font-size:18px;color:var(--accent-color);">🤔 思考中...</div>';
+        const delay = 3000 + Math.floor(Math.random() * 2000);
+        setTimeout(function() {
+            if (optionsText) {
+                const options = optionsText.split('\n').filter(o => o.trim());
+                if (options.length === 0) { resultEl.textContent = '请至少输入一个选项'; return; }
+                const result = options[Math.floor(Math.random() * options.length)];
+                resultEl.innerHTML = `<div style="font-size:13px;color:var(--text-secondary);">${question || '决策结果'}</div><div style="font-size:24px;margin-top:6px;">👉 ${result}</div>`;
+            } else {
+                const answers = ['是 ✅', '否 ❌'];
+                const result = answers[Math.floor(Math.random() * answers.length)];
+                resultEl.innerHTML = `<div style="font-size:13px;color:var(--text-secondary);">${question || '决策结果'}</div><div style="font-size:28px;margin-top:6px;">${result}</div>`;
+            }
+        }, delay);
     }
     // ========== 表情包独立备份 ==========
     function exportStickersFromChat() {
