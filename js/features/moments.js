@@ -338,7 +338,7 @@ const MAX_MOMENTS = 50;
             if (moment.comments.length > 0) {
                 commentsHtml = `<div class="moments-comments-area">` + moment.comments.map(c => {
                     const cAuthorDisplay = c.author === CURRENT_USER ? myName : (c.author === PARTNER_USER ? partnerName : c.author);
-                   return `<div class="moments-comment-item"><span class="moments-comment-author">${cAuthorDisplay}:</span> <span class="moments-comment-text">${c.text}</span> <button onclick="event.stopPropagation();window.deleteMomentComment('${moment.id}','${c.id}')" style="background:none;border:none;color:#ff5050;cursor:pointer;font-size:10px;opacity:0.6;">🗑</button></div>`;
+                   return `<div class="moments-comment-item"><span class="moments-comment-author">${cAuthorDisplay}:</span> <span class="moments-comment-text">${c.text}</span> <button onclick="event.stopPropagation();window.deleteMomentComment('${moment.id}','${c.id}')" style="background:none;border:none;color:#ff5050;cursor:pointer;font-size:10px;opacity:0.4;margin-left:6px;">🗑</button></div>`;
                 }).join('') + `</div>`;
             }
             return `<div class="moments-item">
