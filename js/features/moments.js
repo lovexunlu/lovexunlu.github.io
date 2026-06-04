@@ -8,6 +8,7 @@
     'use strict';
 
     const STORAGE_KEY_MOMENTS = 'moments_data';
+    const STORAGE_KEY_COMMENT_CARDS = 'comment_cards_library';
     const STORAGE_KEY_MOMENT_CARDS = 'moment_cards_library';
     const STORAGE_KEY_MOMENT_IMAGES = 'moment_images_library';
     const STORAGE_KEY_AUTO_SETTINGS = 'moments_auto_settings';
@@ -18,6 +19,7 @@
     let momentCardsLibrary = [];
     let momentImagesLibrary = [];
     let autoTimers = [];
+    let commentCardsLibrary = [];
 const MAX_MOMENTS = 50;
     let autoSettings = {
         enabled: true,
@@ -27,7 +29,7 @@ const MAX_MOMENTS = 50;
         commentChance: 50
     };
 
-    function initMomentsData() {
+        function initMomentsData() {
         try {
             const saved = localStorage.getItem(STORAGE_KEY_MOMENTS);
             momentsData = saved ? JSON.parse(saved) : [];
@@ -44,12 +46,12 @@ const MAX_MOMENTS = 50;
             const savedSettings = localStorage.getItem(STORAGE_KEY_AUTO_SETTINGS);
             if (savedSettings) autoSettings = JSON.parse(savedSettings);
         } catch(e) {}
+        try {
+            const cc = localStorage.getItem(STORAGE_KEY_COMMENT_CARDS);
+            commentCardsLibrary = cc ? JSON.parse(cc) : getDefaultCommentCards();
+        } catch(e) { commentCardsLibrary = getDefaultCommentCards(); }
     }
-
-       function saveMomentsData() {
-        if (momentsData.length > 50) {
-            momentsData = momentsData.slice(0, 50);
-        }
+    function saveMomentsData() {
         try { localStorage.setItem(STORAGE_KEY_MOMENTS, JSON.stringify(momentsData)); } catch(e) {}
     }
     function saveMomentCardsLibrary() {
@@ -73,6 +75,9 @@ const MAX_MOMENTS = 50;
             { id: 'mc_7', text: '分享一首好听的歌 🎵' },
             { id: 'mc_8', text: '生活需要一点甜 🍬' }
         ];
+    }
+        function getDefaultCommentCards() {
+        return [];
     }
 
     function generateId() {
@@ -178,8 +183,13 @@ const MAX_MOMENTS = 50;
             }
         }
         if (Math.random() * 100 < autoSettings.commentChance) {
-            const comments = ['真好看！😊', '好棒呀~', '喜欢 ❤️', '太美了！', '我也想你~', '哈哈哈', '说得好！', '支持！', '好温馨~', '加油！', '每天都要开心哦~', '一起努力！'];
-            const comment = comments[Math.floor(Math.random() * comments.length)];
+            var commentText = '';
+if (commentCardsLibrary.length > 0) {
+    commentText = commentCardsLibrary[Math.floor(Math.random() * commentCardsLibrary.length)].text;
+} else {
+    commentText = '赞！';
+}
+const comment = commentText;
             const partnerName = (typeof settings !== 'undefined' && settings.partnerName) ? settings.partnerName : '梦角';
             addComment(target.id, partnerName, comment, true);
         }
@@ -506,10 +516,7 @@ const MAX_MOMENTS = 50;
         const modal = document.createElement('div');
         modal.className = 'moments-main-overlay';
         modal.id = 'moments-main-overlay';
-        modal.innerHTML = `<div class="moments-main-modal"><div class="moments-main-header"><div class="moments-main-title"><i class="fas fa-globe-americas"></i><span>朋友圈</span></div><div class="moments-main-header-actions"><button class="moments-header-btn" onclick="window.openAutoSettingsModal()" title="自动设置"><i class="fas fa-robot"></i></button><button class="moments-header-btn" onclick="window.openMomentCardsManager()" title="字卡库"><i class="fas fa-comment-dots"></i></button><button class="moments-header-btn" onclick="window.openMomentImagesManager()" title="图片库"><i class="fas fa-images"></i></button><button class="moments-header-btn" onclick="document.getElementById('moments-main-overlay').remove()"><i class="fas fa-times"></i></button></div></div><div class="moments-main-body" id="moments-list"><div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-spin"></i></div></div><div class="moments-main-footer"><button class="moments-publish-btn" onclick="window.openPublishMomentModal()"><i class="fas fa-plus-circle"></i> 发布朋友圈</button></div></div>`;
-        modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
-        document.body.appendChild(modal);
-        renderMomentsList();
+               modal.innerHTML = `<div class="moments-main-modal"><div class="moments-main-header"><div class="moments-main-title"><i class="fas fa-globe-americas"></i><span>朋友圈</span></div><div class="moments-main-header-actions"><button class="moments-header-btn" onclick="window.openAutoSettingsModal()" title="自动设置"><i class="fas fa-robot"></i></button><button class="moments-header-btn" onclick="window.openMomentCardsManager()" title="字卡库"><i class="fas fa-comment-dots"></i></button><button class="moments-header-btn" onclick="window.openCommentCardsManager()" title="评论库"><i class="fas fa-comment-medical"></i></button><button class="moments-header-btn" onclick="window.openMomentImagesManager()" title="图片库"><i class="fas fa-images"></i></button><button class="moments-header-btn" onclick="document.getElementById('moments-main-overlay').remove()"><i class="fas fa-times"></i></button></div></div><div class="moments-main-body" id="moments-list"><div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-spin"></i></div></div><div class="moments-main-footer"><button class="moments-publish-btn" onclick="window.openPublishMomentModal()"><i class="fas fa-plus-circle"></i> 发布朋友圈</button></div></div>`;
         startAutoTimers();
     }
     // ========== 头像上传 ==========
@@ -569,7 +576,30 @@ const MAX_MOMENTS = 50;
         modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
         document.body.appendChild(modal);
     }
+    function openCommentCardsManager() {
+        const modal = document.createElement('div');
+        modal.className = 'moments-card-picker-overlay';
+        modal.id = 'comment-cards-manager-overlay';
+        modal.innerHTML = `<div class="moments-card-picker" style="max-width:500px;"><div class="moments-card-picker-header"><span>💬 评论字卡库</span><button onclick="document.getElementById('comment-cards-manager-overlay').remove()"><i class="fas fa-times"></i></button></div><div style="display:flex;gap:8px;padding:12px;"><input type="text" id="new-comment-card-input" placeholder="输入评论内容..." style="flex:1;padding:10px;border:1px solid var(--border-color);border-radius:8px;font-size:13px;background:var(--primary-bg);color:var(--text-primary);outline:none;"><button onclick="window.addCommentCardAndRefresh()" style="padding:10px 16px;background:var(--accent-color);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">添加</button></div><div class="moments-card-picker-grid">${commentCardsLibrary.map(card => `<div class="moments-card-picker-item" style="display:flex;justify-content:space-between;align-items:center;"><span>${card.text}</span><button onclick="window.removeCommentCardAndRefresh('${card.id}')" style="background:none;border:none;color:#ff5050;cursor:pointer;">×</button></div>`).join('')}</div></div>`;
+        modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+        document.body.appendChild(modal);
+    }
 
+    function addCommentCardAndRefresh() {
+        const input = document.getElementById('new-comment-card-input');
+        if (!input || !input.value.trim()) return;
+        commentCardsLibrary.push({ id: 'cc_' + Date.now(), text: input.value.trim() });
+        localStorage.setItem(STORAGE_KEY_COMMENT_CARDS, JSON.stringify(commentCardsLibrary));
+        const overlay = document.getElementById('comment-cards-manager-overlay');
+        if (overlay) { overlay.remove(); openCommentCardsManager(); }
+    }
+
+    function removeCommentCardAndRefresh(cardId) {
+        commentCardsLibrary = commentCardsLibrary.filter(c => c.id !== cardId);
+        localStorage.setItem(STORAGE_KEY_COMMENT_CARDS, JSON.stringify(commentCardsLibrary));
+        const overlay = document.getElementById('comment-cards-manager-overlay');
+        if (overlay) { overlay.remove(); openCommentCardsManager(); }
+    }
     function addMomentCardAndRefresh() {
         const input = document.getElementById('new-moment-card-input');
         if (!input || !input.value.trim()) return;
@@ -625,12 +655,14 @@ const MAX_MOMENTS = 50;
     window.viewMomentImage = viewMomentImage;
     window.openAutoSettingsModal = openAutoSettingsModal;
     window.openMomentCardsManager = openMomentCardsManager;
+    window.openCommentCardsManager = openCommentCardsManager;
     window.openMomentImagesManager = openMomentImagesManager;
     window.addMomentCardAndRefresh = addMomentCardAndRefresh;
     window.removeMomentCardAndRefresh = removeMomentCardAndRefresh;
+    window.addCommentCardAndRefresh = addCommentCardAndRefresh;
+    window.removeCommentCardAndRefresh = removeCommentCardAndRefresh;
     window.uploadMomentImages = uploadMomentImages;
     window.removeMomentImageAndRefresh = removeMomentImageAndRefresh;
-
     initMomentsData();
     console.log('📱 朋友圈模块已加载（自动版）');
     // ========== 决策助手 ==========
