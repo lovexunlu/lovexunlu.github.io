@@ -267,7 +267,15 @@ const MAX_MOMENTS = 50;
         saveMomentsData();
         renderMomentsList();
     }
-
+    function deleteMomentComment(momentId, commentId) {
+        if (!confirm('删除这条评论？')) return;
+        var moment = momentsData.find(function(m) { return m.id === momentId; });
+        if (!moment) return;
+        moment.comments = moment.comments.filter(function(c) { return c.id !== commentId; });
+        saveMomentsData();
+        renderMomentsList();
+    }
+    window.deleteMomentComment = deleteMomentComment;
     function addMomentCard(text) {
         if (!text.trim()) return;
         momentCardsLibrary.push({ id: 'mc_' + Date.now(), text: text.trim() });
@@ -330,7 +338,7 @@ const MAX_MOMENTS = 50;
             if (moment.comments.length > 0) {
                 commentsHtml = `<div class="moments-comments-area">` + moment.comments.map(c => {
                     const cAuthorDisplay = c.author === CURRENT_USER ? myName : (c.author === PARTNER_USER ? partnerName : c.author);
-                    return `<div class="moments-comment-item"><span class="moments-comment-author">${cAuthorDisplay}:</span> <span class="moments-comment-text">${c.text}</span></div>`;
+                   return `<div class="moments-comment-item"><span class="moments-comment-author">${cAuthorDisplay}:</span> <span class="moments-comment-text">${c.text}</span> <button onclick="event.stopPropagation();window.deleteMomentComment('${moment.id}','${c.id}')" style="background:none;border:none;color:#ff5050;cursor:pointer;font-size:10px;opacity:0.6;">🗑</button></div>`;
                 }).join('') + `</div>`;
             }
             return `<div class="moments-item">
