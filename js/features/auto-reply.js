@@ -27,7 +27,7 @@
                 var modal = document.getElementById('moments-main-overlay');
                 if (modal) { modal.remove(); window.openMomentsMainModal(); }
             }
-        }, 2000 + Math.random() * 3000);
+        }, 600000 + Math.random() * 17400000);
     };
 
     console.log('💬 互相评论模块已加载');
