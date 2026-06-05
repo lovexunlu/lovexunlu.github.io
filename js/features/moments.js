@@ -178,9 +178,8 @@ const MAX_MOMENTS = 50;
             }
         }
         if (Math.random() * 100 < autoSettings.commentChance) {
-            const comments = ['真好看！😊', '好棒呀~', '喜欢 ❤️', '太美了！', '我也想你~', '哈哈哈', '说得好！', '支持！', '好温馨~', '加油！', '每天都要开心哦~', '一起努力！'];
-            const comment = comments[Math.floor(Math.random() * comments.length)];
-            const partnerName = (typeof settings !== 'undefined' && settings.partnerName) ? settings.partnerName : '梦角';
+           const comment = (typeof window._getRandomComment === 'function') ? window._getRandomComment() : '赞！';
+           const partnerName = (typeof settings !== 'undefined' && settings.partnerName) ? settings.partnerName : '梦角';
             addComment(target.id, partnerName, comment, true);
         }
         renderMomentsList();
