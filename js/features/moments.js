@@ -185,13 +185,21 @@ const MAX_MOMENTS = 50;
         renderMomentsList();
     }
 
-    function startAutoTimers() {
+        function startAutoTimers() {
         stopAutoTimers();
         if (!autoSettings.enabled) return;
-        var minVal = Math.max(5, autoSettings.postInterval - 60);
-const randomDelay = (Math.floor(Math.random() * minVal) + 60) * 60 * 1000;
-        const postTimer = setInterval(() => { autoPostMoment(); }, randomDelay);
-        autoTimers.push(postTimer);
+        function scheduleNext() {
+            if (!autoSettings.enabled) return;
+            var minVal = Math.max(5, autoSettings.postInterval - 60);
+            var delay = (Math.floor(Math.random() * minVal) + 60) * 60 * 1000;
+            var timer = setTimeout(function() {
+                autoPostMoment().then(function() {
+                    scheduleNext();
+                });
+            }, delay);
+            autoTimers.push(timer);
+        }
+        scheduleNext();
         const interactTimer = setInterval(() => { autoInteract(); }, autoSettings.commentInterval * 60 * 1000);
         autoTimers.push(interactTimer);
     }
