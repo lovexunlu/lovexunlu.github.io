@@ -188,7 +188,8 @@ const MAX_MOMENTS = 50;
     function startAutoTimers() {
         stopAutoTimers();
         if (!autoSettings.enabled) return;
-        const randomDelay = (Math.floor(Math.random() * (autoSettings.postInterval - 60)) + 60) * 60 * 1000;
+        var minVal = Math.max(5, autoSettings.postInterval - 60);
+const randomDelay = (Math.floor(Math.random() * minVal) + 60) * 60 * 1000;
         const postTimer = setInterval(() => { autoPostMoment(); }, randomDelay);
         autoTimers.push(postTimer);
         const interactTimer = setInterval(() => { autoInteract(); }, autoSettings.commentInterval * 60 * 1000);
