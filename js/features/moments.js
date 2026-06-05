@@ -625,6 +625,7 @@ const MAX_MOMENTS = 50;
     // ========== 暴露全局方法 ==========
     window.openMomentsMainModal = openMomentsMainModal;
     window.autoPostMoment = autoPostMoment;
+    window.startAutoTimers = startAutoTimers;
     window.openPublishMomentModal = openPublishMomentModal;
     window.handlePublishImages = handlePublishImages;
     window.removePublishImage = removePublishImage;
