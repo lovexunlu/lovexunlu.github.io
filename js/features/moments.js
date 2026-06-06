@@ -184,7 +184,10 @@ const MAX_MOMENTS = 50;
         }
         renderMomentsList();
     }
-
+    function stopAutoTimers() {
+        autoTimers.forEach(t => clearInterval(t));
+        autoTimers = [];
+    }
          function startAutoTimers() {
         stopAutoTimers();
         if (!autoSettings.enabled) return;
