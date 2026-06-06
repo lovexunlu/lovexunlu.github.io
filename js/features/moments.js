@@ -185,7 +185,7 @@ const MAX_MOMENTS = 50;
         renderMomentsList();
     }
 
-        function startAutoTimers() {
+         function startAutoTimers() {
         stopAutoTimers();
         if (!autoSettings.enabled) return;
         function scheduleNext() {
@@ -195,6 +195,8 @@ const MAX_MOMENTS = 50;
             var timer = setTimeout(function() {
                 autoPostMoment().then(function() {
                     scheduleNext();
+                }).catch(function() {
+                    scheduleNext();
                 });
             }, delay);
             autoTimers.push(timer);
@@ -203,11 +205,6 @@ const MAX_MOMENTS = 50;
         const interactTimer = setInterval(() => { autoInteract(); }, autoSettings.commentInterval * 60 * 1000);
         autoTimers.push(interactTimer);
     }
-    function stopAutoTimers() {
-        autoTimers.forEach(t => clearInterval(t));
-        autoTimers = [];
-    }
-
     function updateAutoSettings(newSettings) {
         Object.assign(autoSettings, newSettings);
         saveAutoSettings();
