@@ -161,6 +161,7 @@ const MAX_MOMENTS = 50;
             } catch(e) {}
         }
         await publishMoment(text, imageFiles, null, PARTNER_USER);
+        setTimeout(() => { if (autoSettings.enabled) autoPostMoment(); }, autoSettings.postInterval * 60 * 1000);
     }
 
     function autoInteract() {
