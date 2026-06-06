@@ -188,7 +188,7 @@ const MAX_MOMENTS = 50;
         autoTimers.forEach(t => clearInterval(t));
         autoTimers = [];
     }
-         function startAutoTimers() {
+            function startAutoTimers() {
         stopAutoTimers();
         if (!autoSettings.enabled) return;
         function scheduleNext() {
@@ -196,22 +196,14 @@ const MAX_MOMENTS = 50;
             var minVal = Math.max(5, autoSettings.postInterval - 60);
             var delay = (Math.floor(Math.random() * minVal) + 60) * 60 * 1000;
             var timer = setTimeout(function() {
-                autoPostMoment().then(function() {
-                    scheduleNext();
-                }).catch(function() {
-                    scheduleNext();
-                });
+                autoPostMoment();
+                scheduleNext();
             }, delay);
             autoTimers.push(timer);
         }
         scheduleNext();
         const interactTimer = setInterval(() => { autoInteract(); }, autoSettings.commentInterval * 60 * 1000);
         autoTimers.push(interactTimer);
-    }
-    function updateAutoSettings(newSettings) {
-        Object.assign(autoSettings, newSettings);
-        saveAutoSettings();
-        startAutoTimers();
     }
     // ========== 发布 ==========
     async function publishMoment(content, images, cardId, author) {
