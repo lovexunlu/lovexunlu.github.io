@@ -626,7 +626,6 @@ const MAX_MOMENTS = 50;
     window.openMomentsMainModal = openMomentsMainModal;
     window.autoPostMoment = autoPostMoment;
     window.startAutoTimers = startAutoTimers;
-    window.startAutoTimers = startAutoTimers;
     window.openPublishMomentModal = openPublishMomentModal;
     window.handlePublishImages = handlePublishImages;
     window.removePublishImage = removePublishImage;
